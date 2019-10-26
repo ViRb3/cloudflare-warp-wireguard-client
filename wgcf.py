@@ -170,8 +170,8 @@ if __name__ == "__main__":
 
 
     if not identity_path.exists():
-        print("This project is in no way affiliated with CloudFlare!")
-        print(f"CloudFlare's Terms of Service: {terms_of_service_url}")
+        print("This project is in no way affiliated with Cloudflare!")
+        print(f"Cloudflare's Terms of Service: {terms_of_service_url}")
         if not input("Do you agree? (y/N): ").lower() == "y":
             sys.exit(2)
 
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
-        print(f"Enabling WARP")
+        print(f"Enabling Warp")
         enable_warp(account_data)
         conf_data.warp_enabled = True
 
