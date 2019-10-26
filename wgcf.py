@@ -1,11 +1,3 @@
-#
-# CloudFlare WARP WireGuard Client
-#
-# NOTE:
-# 'wg' must be installed for key generation to work
-# https://www.wireguard.com/install/
-#
-
 from pathlib import Path
 from datetime import datetime, timezone
 import requests
