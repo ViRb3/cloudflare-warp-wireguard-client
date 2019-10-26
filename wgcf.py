@@ -11,6 +11,7 @@ api_version = "v0a769"
 api = f"https://api.cloudflareclient.com/{api_version}"
 reg_url = f"{api}/reg"
 status_url = f"{api}/client_config"
+terms_of_service_url = "https://www.cloudflare.com/application/terms/"
 
 data_path = Path(".")
 identity_path = data_path.joinpath("wgcf-identity.json")
@@ -167,7 +168,13 @@ if __name__ == "__main__":
     data_path.mkdir(exist_ok=True)
     account_data: AccountData
 
+
     if not identity_path.exists():
+        print("This project is in no way affiliated with CloudFlare!")
+        print(f"CloudFlare's Terms of Service: {terms_of_service_url}")
+        if not input("Do you agree? (y/N): ").lower() == "y":
+            sys.exit(2)
+
         print(f"Creating new identity")
         account_data = do_register()
         save_identitiy(account_data)
