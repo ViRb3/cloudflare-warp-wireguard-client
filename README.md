@@ -10,7 +10,7 @@ A tool to generate WireGuard profiles from a new or existing Cloudflare Warp acc
 
 ## Usage
 - `poetry install`
-- `poetry run wgcf.py`
+- `poetry run python wgcf.py`
 
 Your new account details will be saved under `wgcf-identity.json` and your WireGuard profile under `wgcf-profile.conf`
 
