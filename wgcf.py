@@ -8,6 +8,7 @@ import subprocess
 api_version = "v0a769"
 api = f"https://api.cloudflareclient.com/{api_version}"
 reg_url = f"{api}/reg"
+status_url = f"{api}/client_config"
 
 data_path = Path(".")
 identity_path = data_path.joinpath("wgcf-identity.json")
