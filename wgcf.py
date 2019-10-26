@@ -175,25 +175,25 @@ if __name__ == "__main__":
         if not input("Do you agree? (y/N): ").lower() == "y":
             sys.exit(2)
 
-        print(f"Creating new identity")
+        print(f"Creating new identity...")
         account_data = do_register()
         save_identitiy(account_data)
     else:
-        print(f"Loading existing identity")
+        print(f"Loading existing identity...")
         account_data = load_identity()
 
-    print(f"Getting configuration")
+    print(f"Getting configuration...")
     conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
-        print(f"Enabling Warp")
+        print(f"Enabling Warp...")
         enable_warp(account_data)
         conf_data.warp_enabled = True
 
     print(f"Account type: {conf_data.account_type}")
     print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
 
-    print("Creating WireGuard configuration")
+    print("Creating WireGuard configuration...")
     create_conf(account_data, conf_data)
 
     print("All done!")
