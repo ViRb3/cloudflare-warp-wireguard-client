@@ -45,6 +45,8 @@ class ConfigurationData():
     endpoint_address_ipv6: str
     endpoint_public_key: str
     warp_enabled: bool
+    account_type: str
+    warp_plus_enabled: bool
 
 
 def get_timestamp() -> str:
@@ -122,8 +124,12 @@ def get_server_conf(account_data: AccountData) -> ConfigurationData:
     addresses = response["config"]["interface"]["addresses"]
     peer = response["config"]["peers"][0]
     endpoint = peer["endpoint"]
+    account = response["account"]
+    account_type = account["account_type"] if "account_type" in account else "free"
+    warp_plus = account["warp_plus"] if "warp_plus" in account else False
+
     return ConfigurationData(addresses["v4"], addresses["v6"], endpoint["host"], endpoint["v4"],
-                             endpoint["v6"], peer["public_key"], response["warp_enabled"])
+                             endpoint["v6"], peer["public_key"], response["warp_enabled"], account_type, warp_plus)
 
 
 def get_wireguard_conf(private_key: str, address_1: str, address_2: str, public_key: str, endpoint: str) -> str:
@@ -170,6 +176,9 @@ if __name__ == "__main__":
         print(f"Enabling WARP")
         enable_warp(account_data)
         conf_data.warp_enabled = True
+
+    print(f"Account type: {conf_data.account_type}")
+    print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
 
     print("Creating WireGuard configuration")
     create_conf(account_data, conf_data)
