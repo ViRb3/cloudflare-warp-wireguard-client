@@ -197,4 +197,6 @@ if __name__ == "__main__":
     print("Creating WireGuard configuration...")
     create_conf(account_data, conf_data)
 
-    print("All done!")
+    print("All done! Find your files here:")
+    print(identity_path.absolute())
+    print(config_path.absolute())
