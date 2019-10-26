@@ -127,9 +127,10 @@ def get_server_conf(account_data: AccountData) -> ConfigurationData:
     addresses = response["config"]["interface"]["addresses"]
     peer = response["config"]["peers"][0]
     endpoint = peer["endpoint"]
-    account = response["account"]
-    account_type = account["account_type"] if "account_type" in account else "free"
-    warp_plus = account["warp_plus"] if "warp_plus" in account else False
+
+    account = response["account"] if "account" in response else ""
+    account_type = account["account_type"] if account != "" else "free"
+    warp_plus = account["warp_plus"] if account != "" else False
 
     return ConfigurationData(addresses["v4"], addresses["v6"], endpoint["host"], endpoint["v4"],
                              endpoint["v6"], peer["public_key"], response["warp_enabled"], account_type, warp_plus)
