@@ -4,6 +4,8 @@ import requests
 import dataclasses
 import json
 import subprocess
+import shutil
+import sys
 
 api_version = "v0a769"
 api = f"https://api.cloudflareclient.com/{api_version}"
@@ -157,8 +159,12 @@ def create_conf(account_data: AccountData, conf_data: ConfigurationData):
 
 
 if __name__ == "__main__":
-    data_path.mkdir(exist_ok=True)
+    if shutil.which("wg") == None:
+        print("Error: 'wg' must be installed and added to PATH")
+        print("More information: https://www.wireguard.com/install/")
+        sys.exit(1)
 
+    data_path.mkdir(exist_ok=True)
     account_data: AccountData
 
     if not identity_path.exists():
