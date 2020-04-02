@@ -37,6 +37,7 @@ class AccountData():
     account_id: str
     access_token: str
     private_key: str
+    license_key: str
 
 
 @dataclasses.dataclass
@@ -50,6 +51,7 @@ class ConfigurationData():
     warp_enabled: bool
     account_type: str
     warp_plus_enabled: bool
+    license_key_updated: bool
 
 
 def get_timestamp() -> str:
@@ -87,7 +89,7 @@ def do_register() -> AccountData:
 
     response.raise_for_status()
     response = json.loads(response.content)
-    return AccountData(response["id"], response["token"], private_key)
+    return AccountData(response["id"], response["token"], private_key, response["account"]["license"])
 
 
 def save_identitiy(account_data: AccountData):
@@ -114,7 +116,6 @@ def enable_warp(account_data: AccountData):
     response = json.loads(response.content)
     assert response["warp_enabled"] == True
 
-
 def get_server_conf(account_data: AccountData) -> ConfigurationData:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
@@ -131,10 +132,29 @@ def get_server_conf(account_data: AccountData) -> ConfigurationData:
     account = response["account"] if "account" in response else ""
     account_type = account["account_type"] if account != "" else "free"
     warp_plus = account["warp_plus"] if account != "" else False
+    license_key_updated = response["account"]["license"] != account_data.license_key
 
     return ConfigurationData(addresses["v4"], addresses["v6"], endpoint["host"], endpoint["v4"],
-                             endpoint["v6"], peer["public_key"], response["warp_enabled"], account_type, warp_plus)
+                             endpoint["v6"], peer["public_key"], response["warp_enabled"],
+                             account_type, warp_plus, license_key_updated)
 
+def update_license_key(account_data: AccountData, conf_data: ConfigurationData) -> bool:
+    if conf_data.account_type == "free" and account_data.license_key != "":
+        headers = default_headers.copy()
+        headers["Authorization"] = f"Bearer {account_data.access_token}"
+        data = {"license": account_data.license_key}
+
+        url = get_config_url(account_data.account_id) + "/account"
+        activation_resp = requests.put(url, json=data, headers=headers, verify=get_verify())
+        activation_resp.raise_for_status()
+        activation_resp = json.loads(activation_resp.content)
+
+        return activation_resp["warp_plus"]
+    elif conf_data.account_type == "unlimited":
+        # Already has unlimited subscription
+        return true
+
+    return false
 
 def get_wireguard_conf(private_key: str, address_1: str, address_2: str, public_key: str, endpoint: str) -> str:
     return f"""
@@ -185,6 +205,12 @@ if __name__ == "__main__":
 
     print(f"Getting configuration...")
     conf_data = get_server_conf(account_data)
+
+    if conf_data.license_key_updated:
+        print("Updating WARP+ license key...")
+        success = update_license_key(account_data, conf_data)
+        if success:
+            conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
         print(f"Enabling Warp...")
