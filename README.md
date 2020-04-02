@@ -20,9 +20,17 @@ Create a new file `wgcf-identity.json` with your account details in the followin
 {
     "account_id": "",
     "access_token": "",
-    "private_key": ""
+    "private_key": "",
+    "license_key": ""
 }
 ```
+
+## Activating WARP+ Unlimited using redeem key
+If you don't have `wgcf-identify.json` file yet, run wgcf.py to create a new WARP account.
+
+In 1.1.1.1 app, go to settings > account. Copy the key from there and replace `license_key` value in `wgcf-identify.json` and run wgcf.py.
+
+wgcf.py will automatically update the license key of WARP identity if given `license_key` is differ from registered one  
 
 ## Extracting from Android [ROOT ONLY]
 - To obtain the `account_id` and `access_token`, you can either:
