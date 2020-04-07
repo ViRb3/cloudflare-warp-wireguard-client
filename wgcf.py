@@ -156,6 +156,31 @@ def update_license_key(account_data: AccountData, conf_data: ConfigurationData) 
 
     return false
 
+def get_device_activation(account_data: AccountData) -> bool:
+    headers = default_headers.copy()
+    headers["Authorization"] = f"Bearer {account_data.access_token}"
+
+    url = get_config_url(account_data.account_id) + f"/account/devices"
+    activation_resp = requests.get(url, headers=headers, verify=get_verify())
+    activation_resp.raise_for_status()
+    activation_resp = json.loads(activation_resp.content)
+
+    mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
+    return mydevice["active"]
+
+def set_device_activation(account_data: AccountData, activate: bool) -> bool:
+    headers = default_headers.copy()
+    headers["Authorization"] = f"Bearer {account_data.access_token}"
+    data = {"active": activate}
+
+    url = get_config_url(account_data.account_id) + f"/account/reg/{account_data.account_id}"
+    activation_resp = requests.patch(url, json=data, headers=headers, verify=get_verify())
+    activation_resp.raise_for_status()
+    activation_resp = json.loads(activation_resp.content)
+
+    mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
+    return mydevice["active"]
+
 def get_wireguard_conf(private_key: str, address_1: str, address_2: str, public_key: str, endpoint: str) -> str:
     return f"""
 [Interface]
@@ -206,16 +231,27 @@ if __name__ == "__main__":
     print(f"Getting configuration...")
     conf_data = get_server_conf(account_data)
 
+
     if conf_data.license_key_updated:
         print("Updating WARP+ license key...")
         success = update_license_key(account_data, conf_data)
         if success:
             conf_data = get_server_conf(account_data)
 
+    device_is_active = get_device_activation(account_data)
+    if conf_data.warp_plus_enabled and not device_is_active:
+        print("It is strongly recommended that activating device before connecting to WARP+")
+        answer = input("Would you like to activate this device? (y/N): ").lower() == "y"
+        device_is_active = set_device_activation(account_data, answer)
+        conf_data = get_server_conf(account_data)
+
     if not conf_data.warp_enabled:
         print(f"Enabling Warp...")
         enable_warp(account_data)
         conf_data.warp_enabled = True
+
+    print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
+    print(f"Device activated: {device_is_active}")
 
     print(f"Account type: {conf_data.account_type}")
     print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
