@@ -1,5 +1,5 @@
 # Cloudflare Warp WireGuard Client
-A tool to generate WireGuard profiles from a new or existing Cloudflare Warp account
+A tool to generate WireGuard profiles for Cloudflare Warp
 
 ## Features
 - Fetch configuration data from server
