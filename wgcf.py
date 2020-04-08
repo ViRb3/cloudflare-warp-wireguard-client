@@ -28,20 +28,20 @@ def get_verify() -> bool:
     return not debug
 
 
-def get_config_url(account_token: str) -> str:
-    return f"{reg_url}/{account_token}"
+def get_config_url(account_id: str) -> str:
+    return f"{reg_url}/{account_id}"
 
 
-def get_account_url(account_token: str) -> str:
-    return f"{get_config_url(account_token)}/account"
+def get_account_url(account_id: str) -> str:
+    return f"{get_config_url(account_id)}/account"
 
 
-def get_devices_url(account_token: str) -> str:
-    return f"{get_account_url(account_token)}/devices"
+def get_devices_url(account_id: str) -> str:
+    return f"{get_account_url(account_id)}/devices"
 
 
-def get_account_reg_url(account_token: str, device_token: str) -> str:
-    return f"{get_account_url(account_token)}/reg/{device_token}"
+def get_account_reg_url(account_id: str, device_token: str) -> str:
+    return f"{get_account_url(account_id)}/reg/{device_token}"
 
 
 @dataclasses.dataclass
