@@ -249,9 +249,9 @@ if __name__ == "__main__":
     conf_data = get_server_conf(account_data)
 
     if conf_data.license_key_updated:
-        print("Updating WARP+ license key...")
-        success = update_license_key(account_data, conf_data)
-        if success:
+        print("Updating account license key...")
+        result = update_license_key(account_data, conf_data)
+        if result:
             conf_data = get_server_conf(account_data)
 
     device_status = get_device_active(account_data)
@@ -260,9 +260,10 @@ if __name__ == "__main__":
         exit(1)
 
     if conf_data.warp_plus_enabled and not device_status:
-        print("It is strongly recommended that activating device before connecting to WARP+")
-        answer = input("Would you like to activate this device? (y/N): ").lower() == "y"
-        device_status = set_device_active(account_data, answer)
+        print("This device is registered to the account, but not active. It is highly recommended to activate it "
+              "before using Warp+.")
+        if input("Would you like to activate this device? (y/N): ").lower() == "y":
+            device_status = set_device_active(account_data, True)
         conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
