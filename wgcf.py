@@ -8,7 +8,7 @@ import shutil
 import sys
 from typing import Optional
 
-api_version = "v0a848"
+api_version = "v0a884"
 api = f"https://api.cloudflareclient.com/{api_version}"
 reg_url = f"{api}/reg"
 status_url = f"{api}/client_config"
