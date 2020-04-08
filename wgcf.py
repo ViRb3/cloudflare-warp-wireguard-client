@@ -168,8 +168,8 @@ def get_device_activation(account_data: AccountData) -> bool:
     activation_resp.raise_for_status()
     activation_resp = json.loads(activation_resp.content)
 
-    mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
-    return mydevice["active"]
+    my_device = next(x for x in activation_resp if x["id"] == account_data.account_id)
+    return my_device["active"]
 
 
 def set_device_activation(account_data: AccountData, activate: bool) -> bool:
@@ -182,8 +182,8 @@ def set_device_activation(account_data: AccountData, activate: bool) -> bool:
     activation_resp.raise_for_status()
     activation_resp = json.loads(activation_resp.content)
 
-    mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
-    return mydevice["active"]
+    my_device = next(x for x in activation_resp if x["id"] == account_data.account_id)
+    return my_device["active"]
 
 
 def get_wireguard_conf(private_key: str, address_1: str, address_2: str, public_key: str, endpoint: str) -> str:
