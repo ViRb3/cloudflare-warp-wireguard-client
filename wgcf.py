@@ -93,7 +93,7 @@ def do_register() -> AccountData:
     private_key = gen_private_key()
     public_key = gen_public_key(private_key)
     data = {"install_id": "", "tos": timestamp, "key": public_key, "fcm_token": "", "type": "Android",
-            "locale": "en_US"}
+            "model": "PC", "locale": "en_US"}
 
     headers = default_headers.copy()
     headers["Content-Type"] = "application/json; charset=UTF-8"
