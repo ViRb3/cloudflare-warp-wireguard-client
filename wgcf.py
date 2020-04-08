@@ -152,9 +152,9 @@ def update_license_key(account_data: AccountData, conf_data: ConfigurationData) 
         return activation_resp["warp_plus"]
     elif conf_data.account_type == "unlimited":
         # Already has unlimited subscription
-        return true
+        return True
 
-    return false
+    return False
 
 def get_device_activation(account_data: AccountData) -> bool:
     headers = default_headers.copy()
