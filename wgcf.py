@@ -46,7 +46,7 @@ def get_account_reg_url(account_id: str, device_token: str) -> str:
 
 
 @dataclasses.dataclass
-class AccountData():
+class AccountData:
     account_id: str
     access_token: str
     private_key: str
@@ -54,7 +54,7 @@ class AccountData():
 
 
 @dataclasses.dataclass
-class ConfigurationData():
+class ConfigurationData:
     local_address_ipv4: str
     local_address_ipv6: str
     endpoint_address_host: str
@@ -127,7 +127,7 @@ def enable_warp(account_data: AccountData):
 
     response.raise_for_status()
     response = json.loads(response.content)
-    assert response["warp_enabled"] == True
+    assert response["warp_enabled"] is True
 
 
 def get_server_conf(account_data: AccountData) -> ConfigurationData:
@@ -224,7 +224,7 @@ def create_conf(account_data: AccountData, conf_data: ConfigurationData):
 
 
 if __name__ == "__main__":
-    if shutil.which("wg") == None:
+    if shutil.which("wg") is None:
         print("Error: 'wg' must be installed and added to PATH")
         print("More information: https://www.wireguard.com/install/")
         sys.exit(1)
