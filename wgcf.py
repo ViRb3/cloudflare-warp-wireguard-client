@@ -133,7 +133,7 @@ def get_server_conf(account_data: AccountData) -> ConfigurationData:
     account = response["account"] if "account" in response else ""
     account_type = account["account_type"] if account != "" else "free"
     warp_plus = account["warp_plus"] if account != "" else False
-    license_key_updated = response["account"]["license"] != account_data.license_key
+    license_key_updated = response["account"]["license"].strip() != account_data.license_key.strip()
 
     return ConfigurationData(addresses["v4"], addresses["v6"], endpoint["host"], endpoint["v4"],
                              endpoint["v6"], peer["public_key"], response["warp_enabled"],
