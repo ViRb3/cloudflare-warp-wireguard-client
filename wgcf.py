@@ -260,7 +260,7 @@ if __name__ == "__main__":
         exit(1)
 
     if conf_data.warp_plus_enabled and not device_status:
-        print("This device is registered to the account, but not active. It is highly recommended to activate it "
+        print("This device is registered to the account, but not activated. It is highly recommended to activate it "
               "before using Warp+.")
         if input("Would you like to activate this device? (y/N): ").lower() == "y":
             device_status = set_device_active(account_data, True)
