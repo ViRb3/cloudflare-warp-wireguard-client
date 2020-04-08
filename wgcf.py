@@ -58,9 +58,9 @@ def get_timestamp() -> str:
     # SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss", Locale.US)
     timestamp = datetime.now(tz=timezone.utc).astimezone(None).strftime("%Y-%m-%dT%H:%M:%S.%f%z")
     # trim microseconds to 2 digits
-    timestamp = timestamp[:-10]+timestamp[-6:]
+    timestamp = timestamp[:-10] + timestamp[-6:]
     # separate timezone offset
-    timestamp = timestamp[:-2]+":"+timestamp[-2:]
+    timestamp = timestamp[:-2] + ":" + timestamp[-2:]
     return timestamp
 
 
@@ -116,6 +116,7 @@ def enable_warp(account_data: AccountData):
     response = json.loads(response.content)
     assert response["warp_enabled"] == True
 
+
 def get_server_conf(account_data: AccountData) -> ConfigurationData:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
@@ -138,6 +139,7 @@ def get_server_conf(account_data: AccountData) -> ConfigurationData:
                              endpoint["v6"], peer["public_key"], response["warp_enabled"],
                              account_type, warp_plus, license_key_updated)
 
+
 def update_license_key(account_data: AccountData, conf_data: ConfigurationData) -> bool:
     if conf_data.account_type == "free" and account_data.license_key != "":
         headers = default_headers.copy()
@@ -156,6 +158,7 @@ def update_license_key(account_data: AccountData, conf_data: ConfigurationData) 
 
     return False
 
+
 def get_device_activation(account_data: AccountData) -> bool:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
@@ -167,6 +170,7 @@ def get_device_activation(account_data: AccountData) -> bool:
 
     mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
     return mydevice["active"]
+
 
 def set_device_activation(account_data: AccountData, activate: bool) -> bool:
     headers = default_headers.copy()
@@ -180,6 +184,7 @@ def set_device_activation(account_data: AccountData, activate: bool) -> bool:
 
     mydevice = next(x for x in activation_resp if x["id"] == account_data.account_id)
     return mydevice["active"]
+
 
 def get_wireguard_conf(private_key: str, address_1: str, address_2: str, public_key: str, endpoint: str) -> str:
     return f"""
@@ -214,7 +219,6 @@ if __name__ == "__main__":
     data_path.mkdir(exist_ok=True)
     account_data: AccountData
 
-
     if not identity_path.exists():
         print("This project is in no way affiliated with Cloudflare!")
         print(f"Cloudflare's Terms of Service: {terms_of_service_url}")
@@ -230,7 +234,6 @@ if __name__ == "__main__":
 
     print(f"Getting configuration...")
     conf_data = get_server_conf(account_data)
-
 
     if conf_data.license_key_updated:
         print("Updating WARP+ license key...")
