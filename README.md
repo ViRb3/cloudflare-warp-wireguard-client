@@ -9,10 +9,26 @@ A tool to generate WireGuard profiles for Cloudflare Warp
 - Create WireGuard profile
 
 ## Usage
-- `poetry install`
-- `poetry run python wgcf.py`
+1. Install [WireGuard](https://www.wireguard.com/install/). Make sure its command-line tool `wg` is accessible from your `PATH`
+1. Install [Python 3.7+](https://www.python.org/downloads/)
+2. Install [poetry](https://github.com/python-poetry/poetry) using [pip](https://pypi.org/project/pip/):
+    ```bash
+    pip3 install poetry
+    ```
+3. Download [this project](https://github.com/ViRb3/cloudflare-warp-wireguard-client/archive/master.zip) and extract it
+4. Open a shell in the extracted directory
+5. _(only first time)_ Install the dependencies:
+    ```bash
+    poetry install
+    ```
+6. Run the script:
+    ```bash
+    poetry run python wgcf.py
+    ```
 
 Your new account details will be saved under `wgcf-identity.json` and your WireGuard profile under `wgcf-profile.conf`.
+
+You can use the WireGuard profile on any OS that supports WireGuard, including Windows, macOS, Linux and Android. For more information, please refer to the [WireGuard installation instructions](https://www.wireguard.com/install/).
 
 ## Using existing license key
 If you have an existing account, for an example on your phone, you can use its license key to bind this device's account to that of your phone and share its Warp+ features. Please note that there is a limit of a maximum of 5 active linked devices.
