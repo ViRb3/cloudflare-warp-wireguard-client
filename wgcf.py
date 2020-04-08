@@ -32,6 +32,18 @@ def get_config_url(account_token: str) -> str:
     return f"{reg_url}/{account_token}"
 
 
+def get_account_url(account_token: str) -> str:
+    return f"{get_config_url(account_token)}/account"
+
+
+def get_devices_url(account_token: str) -> str:
+    return f"{get_account_url(account_token)}/devices"
+
+
+def get_account_reg_url(account_token: str, device_token: str) -> str:
+    return f"{get_account_url(account_token)}/reg/{device_token}"
+
+
 @dataclasses.dataclass
 class AccountData():
     account_id: str
@@ -146,14 +158,14 @@ def update_license_key(account_data: AccountData, conf_data: ConfigurationData) 
         headers["Authorization"] = f"Bearer {account_data.access_token}"
         data = {"license": account_data.license_key}
 
-        url = get_config_url(account_data.account_id) + "/account"
+        url = get_account_url(account_data.account_id)
         activation_resp = requests.put(url, json=data, headers=headers, verify=get_verify())
         activation_resp.raise_for_status()
         activation_resp = json.loads(activation_resp.content)
 
         return activation_resp["warp_plus"]
     elif conf_data.account_type == "unlimited":
-        # Already has unlimited subscription
+        # already has unlimited subscription
         return True
 
     return False
@@ -163,7 +175,7 @@ def get_device_activation(account_data: AccountData) -> bool:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
 
-    url = get_config_url(account_data.account_id) + f"/account/devices"
+    url = get_devices_url(account_data.account_id)
     activation_resp = requests.get(url, headers=headers, verify=get_verify())
     activation_resp.raise_for_status()
     activation_resp = json.loads(activation_resp.content)
@@ -177,7 +189,7 @@ def set_device_activation(account_data: AccountData, activate: bool) -> bool:
     headers["Authorization"] = f"Bearer {account_data.access_token}"
     data = {"active": activate}
 
-    url = get_config_url(account_data.account_id) + f"/account/reg/{account_data.account_id}"
+    url = get_account_reg_url(account_data.account_id, account_data.account_id)
     activation_resp = requests.patch(url, json=data, headers=headers, verify=get_verify())
     activation_resp.raise_for_status()
     activation_resp = json.loads(activation_resp.content)
