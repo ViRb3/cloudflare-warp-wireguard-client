@@ -264,7 +264,6 @@ if __name__ == "__main__":
               "before using Warp+.")
         if input("Would you like to activate this device? (y/N): ").lower() == "y":
             device_status = set_device_active(account_data, True)
-        conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
         print(f"Enabling Warp...")
