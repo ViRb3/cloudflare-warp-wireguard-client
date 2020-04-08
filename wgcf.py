@@ -6,6 +6,7 @@ import json
 import subprocess
 import shutil
 import sys
+from typing import Optional
 
 api_version = "v0a848"
 api = f"https://api.cloudflareclient.com/{api_version}"
@@ -171,7 +172,7 @@ def update_license_key(account_data: AccountData, conf_data: ConfigurationData) 
     return False
 
 
-def get_device_activation(account_data: AccountData) -> bool:
+def get_device_active(account_data: AccountData) -> Optional[bool]:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
 
@@ -180,14 +181,14 @@ def get_device_activation(account_data: AccountData) -> bool:
     activation_resp.raise_for_status()
     activation_resp = json.loads(activation_resp.content)
 
-    my_device = next(x for x in activation_resp if x["id"] == account_data.account_id)
-    return my_device["active"]
+    my_device = next((x for x in activation_resp if x["id"] == account_data.account_id), None)
+    return None if my_device is None else my_device["active"]
 
 
-def set_device_activation(account_data: AccountData, activate: bool) -> bool:
+def set_device_active(account_data: AccountData, status: bool) -> bool:
     headers = default_headers.copy()
     headers["Authorization"] = f"Bearer {account_data.access_token}"
-    data = {"active": activate}
+    data = {"active": status}
 
     url = get_account_reg_url(account_data.account_id, account_data.account_id)
     activation_resp = requests.patch(url, json=data, headers=headers, verify=get_verify())
@@ -253,11 +254,15 @@ if __name__ == "__main__":
         if success:
             conf_data = get_server_conf(account_data)
 
-    device_is_active = get_device_activation(account_data)
-    if conf_data.warp_plus_enabled and not device_is_active:
+    device_status = get_device_active(account_data)
+    if device_status is None:
+        print("This device not registered to the account!")
+        exit(1)
+
+    if conf_data.warp_plus_enabled and not device_status:
         print("It is strongly recommended that activating device before connecting to WARP+")
         answer = input("Would you like to activate this device? (y/N): ").lower() == "y"
-        device_is_active = set_device_activation(account_data, answer)
+        device_status = set_device_active(account_data, answer)
         conf_data = get_server_conf(account_data)
 
     if not conf_data.warp_enabled:
@@ -266,7 +271,7 @@ if __name__ == "__main__":
         conf_data.warp_enabled = True
 
     print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
-    print(f"Device activated: {device_is_active}")
+    print(f"Device activated: {device_status}")
 
     print(f"Account type: {conf_data.account_type}")
     print(f"Warp+ enabled: {conf_data.warp_plus_enabled}")
