@@ -257,7 +257,7 @@ if __name__ == "__main__":
     device_status = get_device_active(account_data)
     if device_status is None:
         print("This device not registered to the account!")
-        exit(1)
+        sys.exit(3)
 
     if conf_data.warp_plus_enabled and not device_status:
         print("This device is registered to the account, but not activated. It is highly recommended to activate it "
