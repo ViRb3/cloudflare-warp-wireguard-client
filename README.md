@@ -1,6 +1,9 @@
 # Cloudflare Warp WireGuard Client
 A tool to generate WireGuard profiles for Cloudflare Warp
 
+> ## :warning: Notice:
+> ## This project has been deprecated in favor of [wgcf](https://github.com/ViRb3/wgcf) - a complete re-write in Golang. It includes numerous new features and improvements, runs natively on any operating system, and has zero dependencies. [Get wgcf now!](https://github.com/ViRb3/wgcf)
+
 ## Features
 - Fetch configuration data from server
 - Create new account
